@@ -10,12 +10,15 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
+<<<<<<< HEAD
 import speech_recognition as sr
 import pyttsx3
 import sounddevice as sd
 import soundfile as sf
 import pygame
 import time
+=======
+>>>>>>> 5cb0f629e21bb0e007c8464cb8fa51abd9b7b1bb
 
 # Load environment variables
 load_dotenv()
@@ -86,6 +89,7 @@ def user_input(user_question):
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     return response["output_text"]
 
+<<<<<<< HEAD
 # Function to record voice
 def record_voice(filename, duration):
     samplerate = 44100  # Adjust as needed
@@ -106,12 +110,18 @@ def speech_to_text(filename):
         return "Speech recognition could not understand audio"
     except sr.RequestError as e:
         return f"Could not request results from Google Speech Recognition service; {e}"
+=======
+>>>>>>> 5cb0f629e21bb0e007c8464cb8fa51abd9b7b1bb
 # Streamlit app initialization
 st.set_page_config(page_title="Gemini Multi-Purpose App")
 
 # Sidebar for file uploaders and mode selection
 st.sidebar.header("Options")
+<<<<<<< HEAD
 mode = st.sidebar.radio("Mode:", ("Image Description", "Text Chatbot", "Chat with PDF"))
+=======
+mode = st.sidebar.radio("Mode:", ("Image Description", "Q&A Chatbot", "Chat with PDF"))
+>>>>>>> 5cb0f629e21bb0e007c8464cb8fa51abd9b7b1bb
 
 if mode == "Image Description":
     uploaded_file = st.sidebar.file_uploader("Upload Image:", type=["jpg", "jpeg", "png"])
@@ -120,15 +130,20 @@ elif mode == "Chat with PDF":
 
 # Main content area for input prompt, submit button, and chat history
 st.header("Gemini Application")
+<<<<<<< HEAD
 if 'input_prompt' not in st.session_state:
     st.session_state['input_prompt'] = ""
 input_prompt = st.text_input("Input Prompt:", key="input", value=st.session_state['input_prompt'])
+=======
+input_prompt = st.text_input("Input Prompt:", key="input")
+>>>>>>> 5cb0f629e21bb0e007c8464cb8fa51abd9b7b1bb
 submit_button = st.button("Submit")
 
 # Initialize chat history if it doesn't exist
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
+<<<<<<< HEAD
 # Microphone recording functionality
 if st.button("Start Recording"):
     filename = "recorded_audio.wav"
@@ -183,6 +198,37 @@ if submit_button:
         # Add bot response to chat history
         st.session_state['chat_history'].append(("Bot", response))
 
+=======
+# Main app code
+if submit_button:
+    # Add user query to chat history
+    st.session_state['chat_history'].append(("You", input_prompt))
+
+    if mode == "Image Description" and uploaded_file:
+        image = Image.open(uploaded_file)
+        response = get_gemini_response_image(input_prompt, image)
+        st.subheader("Response:")
+        st.write(response)
+        # Add bot response to chat history
+        st.session_state['chat_history'].append(("Bot", response))
+    elif mode == "Q&A Chatbot":
+        response = get_gemini_response(input_prompt)
+        st.subheader("Response:")
+        for chunk in response:
+            st.write(chunk.text)
+            # Add bot response to chat history
+            st.session_state['chat_history'].append(("Bot", chunk.text))
+    elif mode == "Chat with PDF" and pdf_docs:
+        raw_text = get_pdf_text(pdf_docs)
+        text_chunks = get_text_chunks(raw_text)
+        get_vector_store(text_chunks)
+        response = user_input(input_prompt)
+        st.subheader("Response:")
+        st.write(response)
+        # Add bot response to chat history
+        st.session_state['chat_history'].append(("Bot", response))
+
+>>>>>>> 5cb0f629e21bb0e007c8464cb8fa51abd9b7b1bb
 # Display chat history
 st.subheader("Chat History")
 for role, text in st.session_state['chat_history']:

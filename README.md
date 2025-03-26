@@ -10,6 +10,7 @@ PDF Chat: Upload PDF documents and interact with a question-answering chatbot th
 ####Requirements
 Ensure you have the following dependencies installed:
 
+
 Python 3.7+
 Streamlit
 PyPDF2
